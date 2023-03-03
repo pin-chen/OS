@@ -2,7 +2,7 @@
 
 Physical Environment: Raspberry Pi 3b+
 
-Simulate environment: QEMU
+Simulate Environment: QEMU
 
 Build Command:
 ```
