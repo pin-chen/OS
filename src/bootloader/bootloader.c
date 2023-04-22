@@ -1,10 +1,11 @@
-#include <kernel.h>
+#include <bootloader.h>
 
 #include <stdint.h>
 #include <stddef.h>
 
 #include <uart.h>
 #include <utils.h>
+#include <string.h>
 #include <mailbox.h>
 
 extern uint32_t _bss_begin;
