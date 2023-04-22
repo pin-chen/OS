@@ -35,7 +35,7 @@ void get_board_revision(uint32_t*revision){
     *revision = mailbox[5];
 }
 
-void get_ARM_memory_base_address_and_size(uint64_t*addr_base, uint32_t*size){
+void get_ARM_memory_base_address_and_size(uint32_t*addr_base, uint32_t*size){
     unsigned int mailbox[8];
     mailbox[0] = 8 * 4; // buffer size in bytes
     mailbox[1] = REQUEST_CODE;
@@ -48,9 +48,9 @@ void get_ARM_memory_base_address_and_size(uint64_t*addr_base, uint32_t*size){
     // tags end
     mailbox[7] = END_TAG;
 
-    mailbox_call(mailbox);
+    mailbox_call(mailbox); // message passing procedure call, you should implement it following the 6 steps provided above.
 
     //printf("0x%x\n", mailbox[5]); // it should be 0xa020d3 for rpi3 b+
-    *addr_base = (uint64_t)mailbox[5];
+    *addr_base = mailbox[5];
     *size = mailbox[6];
 }

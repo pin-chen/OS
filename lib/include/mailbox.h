@@ -21,5 +21,5 @@
 
 void mailbox_call(uint32_t* mailbox);
 void get_board_revision(uint32_t*revision);
-void get_ARM_memory_base_address_and_size(uint64_t*addr_base, uint32_t*size);
+void get_ARM_memory_base_address_and_size(uint32_t*addr_base, uint32_t*size);
 #endif
