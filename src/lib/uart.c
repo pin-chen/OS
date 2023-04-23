@@ -29,11 +29,21 @@ void uart_init(){
 size_t uart_read_1c(char*buf){
     while(!(memory_read(AUX_MU_LSR_REG) & 0x01));
     buf[0] = (char)(memory_read(AUX_MU_IO_REG) & 0xff);
-    if(buf[0] == '\r') 
-        uart_print("\r\n");
-    else
-        uart_write_1c(&buf[0]);
+    //if(buf[0] == '\r') 
+    //    uart_print("\r\n");
+    //else
+    //    uart_write_1c(&buf[0]);
     return 1;
+}
+
+size_t uart_read(char* buf, size_t len)
+{
+    size_t recvlen = 0;
+    while(recvlen < len){
+        while(!(memory_read(AUX_MU_LSR_REG) & 1));
+        buf[recvlen++] = (char)(memory_read(AUX_MU_IO_REG) & 0xff);
+    }
+    return recvlen;
 }
 
 size_t uart_write_1c(char*buf){
@@ -53,7 +63,7 @@ size_t uart_write(char* buf, size_t len){
 size_t uart_readline(char* buf){
     int i = 0;
     while(uart_read_1c(&buf[i])){
-        if(buf[i] == '\r'){
+        if(buf[i] == '\r' || buf[i] == '\n'){
             buf[i] = '\0';
             break;
         }

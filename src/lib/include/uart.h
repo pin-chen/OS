@@ -21,6 +21,7 @@
 
 void uart_init();
 size_t uart_read_1c(char*buf);
+size_t uart_read(char* buf, size_t len);
 size_t uart_write_1c(char*buf);
 size_t uart_write(char* buf, size_t len);
 size_t uart_readline(char* buf);

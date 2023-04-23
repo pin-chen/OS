@@ -44,8 +44,8 @@ void _init(void){
 
 void boot_message(){
 	char buf[BUF_SIZE];
-	uart_print("Boot Success!\r\n");
-
+	uart_print("Boot Success!\n\r");
+	
 	uint32_t board_revision;
     uint32_t arm_memory_base_addr;
     uint32_t arm_memory_size;
@@ -54,15 +54,15 @@ void boot_message(){
 
 	uart_print("board_revision: ");
 	uart_print_hex(board_revision, 32);
-	uart_print("\r\n");
+	uart_print("\n\r");
 
 	uart_print("arm_memory_base_addr: ");
 	uart_print_hex(arm_memory_base_addr, 32);
-	uart_print("\r\n");
+	uart_print("\n\r");
 
 	uart_print("arm_memory_size: ");
 	uart_print_hex(arm_memory_size, 32);
-	uart_print("\r\n");
+	uart_print("\n\r");
 }
 
 void shell(){
@@ -71,18 +71,18 @@ void shell(){
 		uart_print("# ");
 		uart_readline(buf);
 		if(strncmp(buf, "help", 4) == 0){
-			uart_print("help\t: print this help menu\r\n");
-			uart_print("hello\t: print Hello World!\r\n");
-			uart_print("reboot\t: reboot the device\r\n");
+			uart_print("help\t: print this help menu\n\r");
+			uart_print("hello\t: print Hello World!\n\r");
+			uart_print("reboot\t: reboot the device\n\r");
 		}else if(strncmp(buf, "hello", 5) == 0){
-			uart_print("Hello World!\r\n");
+			uart_print("Hello World!\n\r");
 		}else if(strncmp(buf, "reboot", 6) == 0){
-			uart_print("Reboot system now!\r\n");
+			uart_print("Reboot system now!\n\r");
 			reset(1<<16);
 		}else{
 			uart_print("Unknown command: [");
 			uart_print(buf);
-			uart_print("].\r\n");
+			uart_print("].\n\r");
 		}
 	}
 }

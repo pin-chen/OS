@@ -15,7 +15,7 @@ BOOTLOADER_OBJS := $(BOOTLOADER_SRCS:%=$(BUILD_DIR)/%.o)
 
 KERNEL_CFLAGS := -I $(KERNEL_DIR)/include
 BOOTLOADER_CFLAGS := -I $(BOOTLOADER_DIR)/include
-CFLAGS := -O0 -I $(LIB_DIR)/include -fno-stack-protector -ffreestanding -fdata-sections -ffunction-sections
+CFLAGS := -O0 -I $(LIB_DIR)/include -fno-stack-protector -ffreestanding -fdata-sections -ffunction-sections -g
 
 .PHONY : all clean
 

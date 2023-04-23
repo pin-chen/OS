@@ -1,15 +1,18 @@
 ENTRY(_start)
 MEMORY
 {
-	CODE (rx) : ORIGIN = 0x80000, LENGTH = 512K
-	ROM (r) : ORIGIN = 0x100000, LENGTH = 512K
-	RAM (rw) : ORIGIN = 0x180000, LENGTH = 1M
+	BOOTLOADER (rx) : ORIGIN = 0x20000, LENGTH = 128K
+	CODE (rx) : ORIGIN = 0x80000, LENGTH = 128K
+	ROM (r) : ORIGIN = 0xa0000, LENGTH = 128K
+	RAM (rw) : ORIGIN = 0xc0000, LENGTH = 512K
 }
 SECTIONS
 {
 	.text :
 	{ 
+		_loader_begin = .;
   		*(.text.start)
+		*(.text.loader)
 		*(.text)
 	} >CODE
 	.rodata :
@@ -29,6 +32,10 @@ SECTIONS
 		_bss_begin = .;
 		*(.bss)
 		_bss_end = .;
+		_loader_end = .;
 	} >RAM
 	_stack_top = ORIGIN(RAM) + LENGTH(RAM);
+	_bootloader_begin = ORIGIN(BOOTLOADER);
+	_loader_size = _loader_end - _loader_begin;
+	_kernel_begin = ORIGIN(CODE);
 }
