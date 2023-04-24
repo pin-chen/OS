@@ -33,7 +33,7 @@ kernel8.img: $(KERNEL_OBJS)
 bootloader.img: $(BOOTLOADER_OBJS)
 	echo $(BOOTLOADER_SRCS)
 	echo $(BOOTLOADER_OBJS)
-	$(LD) -T $(BOOTLOADER_DIR)/linker.ld -o bootloader.elf $^ --gc-sections
+	$(LD) -T $(BOOTLOADER_DIR)/linker.ld -o bootloader.elf $^
 	$(OC) -O binary bootloader.elf bootloader.img
 
 $(BUILD_DIR)/kernel/%.c.o: $(KERNEL_DIR)/%.c 
