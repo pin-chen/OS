@@ -3,7 +3,7 @@ MEMORY
 {
 	CODE (rx) : ORIGIN = 0x80000, LENGTH = 128K
 	ROM (r) : ORIGIN = 0xa0000, LENGTH = 128K
-	RAM (rw) : ORIGIN = 0xc0000, LENGTH = 128K
+	RAM (rw) : ORIGIN = 0xc0000, LENGTH = 5M
 }
 SECTIONS
 {
@@ -30,5 +30,7 @@ SECTIONS
 		*(.bss)
 		_bss_end = .;
 	} >RAM
+	_heap_begin = ORIGIN(RAM) + 1M;
+	_heap_end = ORIGIN(RAM) + 4M;
 	_stack_top = ORIGIN(RAM) + LENGTH(RAM);
 }

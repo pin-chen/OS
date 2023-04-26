@@ -91,3 +91,7 @@ void uart_print_hex(uint64_t num, int len){
     }
     uart_print(hex);
 }
+
+void newline(){
+    uart_print("\n\r");
+}

@@ -27,4 +27,5 @@ size_t uart_write(char* buf, size_t len);
 size_t uart_readline(char* buf);
 void uart_print(char* buf);
 void uart_print_hex(uint64_t num, int len);
+void newline();
 #endif

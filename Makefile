@@ -17,12 +17,15 @@ KERNEL_CFLAGS := -I $(KERNEL_DIR)/include
 BOOTLOADER_CFLAGS := -I $(BOOTLOADER_DIR)/include
 CFLAGS := -O0 -I $(LIB_DIR)/include -fno-stack-protector -ffreestanding -fdata-sections -ffunction-sections -g
 
-.PHONY : all clean
+.PHONY : all clean rootfs
 
 all: kernel8.img bootloader.img
 
 clean:
 	rm -rf build kernel8.img kernel8.elf bootloader.elf bootloader.img
+
+rootfs:
+	cd rootfs && find . | cpio -o -H newc > ../initramfs.cpio
 
 kernel8.img: $(KERNEL_OBJS)
 	echo $(KERNEL_SRCS)
@@ -33,7 +36,7 @@ kernel8.img: $(KERNEL_OBJS)
 bootloader.img: $(BOOTLOADER_OBJS)
 	echo $(BOOTLOADER_SRCS)
 	echo $(BOOTLOADER_OBJS)
-	$(LD) -T $(BOOTLOADER_DIR)/linker.ld -o bootloader.elf $^
+	$(LD) -T $(BOOTLOADER_DIR)/linker.ld -o bootloader.elf $^ --gc-sections
 	$(OC) -O binary bootloader.elf bootloader.img
 
 $(BUILD_DIR)/kernel/%.c.o: $(KERNEL_DIR)/%.c 
