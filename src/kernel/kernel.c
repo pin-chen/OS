@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stddef.h>
 // tool
+#include <shell.h>
 #include <utils.h>
 #include <string.h>
 // lab1
@@ -11,6 +12,8 @@
 #include <reboot.h>
 // lab2
 #include <allocator.h>
+#include <ramdisk.h>
+#include <devicetree.h>
 
 extern uint32_t _bss_begin;
 extern uint32_t _bss_end;
@@ -28,8 +31,8 @@ void _init(void){
 
 void boot_message(){
 	char buf[BUF_SIZE];
-	uart_print("Boot Success!\n\r");
-	
+	uart_print("Boot Success!");
+	newline();
 	uint32_t board_revision;
     uint32_t arm_memory_base_addr;
     uint32_t arm_memory_size;
@@ -52,39 +55,12 @@ void boot_message(){
 void allocator_test(){
 	void *test1 = simple_malloc(1);
     void *test2 = simple_malloc(16);
+
     uart_print("Test Simple Allocator 1: 0x");
     uart_print_hex((uint64_t)test1, 64);
 	newline();
+
     uart_print("Test Simple Allocator 2: 0x");
     uart_print_hex((uint64_t)test2, 64);
 	newline();
-
-}
-
-void shell(){
-	char buf[BUF_SIZE];
-	while(1){
-		uart_print("# ");
-		uart_readline(buf);
-		if(strncmp(buf, "help", 4) == 0){
-			uart_print("help\t: print this help menu");
-			newline();
-			uart_print("hello\t: print Hello World!");
-			newline();
-			uart_print("reboot\t: reboot the device");
-			newline();
-		}else if(strncmp(buf, "hello", 5) == 0){
-			uart_print("Hello World!");
-			newline();
-		}else if(strncmp(buf, "reboot", 6) == 0){
-			uart_print("Reboot system now!");
-			newline();
-			reset(1<<16);
-		}else{
-			uart_print("Unknown command: [");
-			uart_print(buf);
-			uart_print("].");
-			newline();
-		}
-	}
 }

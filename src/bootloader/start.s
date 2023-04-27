@@ -6,6 +6,7 @@
 .extern _init
 .global _start
 _start:
+	mov x10, x0
 	adrp x0, _stack_top
 	mov sp, x0
 	mov x29, x0

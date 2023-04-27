@@ -30,8 +30,10 @@ void load_kernel(){
 	uart_print_hex(imagesize, 32);
 	uart_print("): ");
 	uart_read(kernel_addr, imagesize);
-	uart_print("Go to kernel!\n\r");
+	uart_print("Go to kernel!");
+	newline();
 	asm volatile(
+		"mov x0, x10\n"
 		"ldr x1, =0x80000\n"
     	"br x1\n"
     );
