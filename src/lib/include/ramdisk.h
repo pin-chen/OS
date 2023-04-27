@@ -41,6 +41,6 @@ typedef struct _cpio_file{
 } cpio_file;
 
 int ramdisk_get_addr();
-cpio_file*cpio_parse();
+cpio_file* cpio_parse();
 
 #endif

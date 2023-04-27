@@ -3,6 +3,6 @@
 #define BUF_SIZE 256
 void _init();
 void boot_message();
-void shell();
 void allocator_test();
+void devicetree_check();
 #endif

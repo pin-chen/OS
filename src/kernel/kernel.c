@@ -18,6 +18,7 @@
 extern uint32_t _bss_begin;
 extern uint32_t _bss_end;
 extern uint32_t _stack_top;
+extern void *_devicetree_begin;
 
 void _init(void){
 	for(uint32_t*addr = &_bss_begin; addr != &_bss_end; addr++){
@@ -26,6 +27,7 @@ void _init(void){
 	uart_init();
 	boot_message();
 	allocator_test();
+	devicetree_check();
 	shell();
 }
 
@@ -56,11 +58,17 @@ void allocator_test(){
 	void *test1 = simple_malloc(1);
     void *test2 = simple_malloc(16);
 
-    uart_print("Test Simple Allocator 1: 0x");
+    uart_print("Test Simple Allocator 1: ");
     uart_print_hex((uint64_t)test1, 64);
 	newline();
 
-    uart_print("Test Simple Allocator 2: 0x");
+    uart_print("Test Simple Allocator 2: ");
     uart_print_hex((uint64_t)test2, 64);
+	newline();
+}
+
+void devicetree_check(){
+	uart_print("Devicetree address: ");
+    uart_print_hex((uint64_t)_devicetree_begin, 64);
 	newline();
 }

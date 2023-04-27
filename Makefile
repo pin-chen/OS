@@ -17,15 +17,22 @@ KERNEL_CFLAGS := -I $(KERNEL_DIR)/include
 BOOTLOADER_CFLAGS := -I $(BOOTLOADER_DIR)/include
 CFLAGS := -O0 -I $(LIB_DIR)/include -fno-stack-protector -ffreestanding -fdata-sections -ffunction-sections -g
 
-.PHONY : all clean rootfs
+.PHONY : all clean rootfs test debug
 
 all: kernel8.img bootloader.img
+	cp bootloader.img raspi3b/bootloader.img
 
 clean:
 	rm -rf build kernel8.img kernel8.elf bootloader.elf bootloader.img
 
 rootfs:
-	cd rootfs && find . | cpio -o -H newc > ../initramfs.cpio
+	cd rootfs && find . | cpio -o -H newc > ../raspi3b/initramfs.cpio
+
+test:
+	qemu-system-aarch64 -M raspi3b -kernel bootloader.img -initrd raspi3b/initramfs.cpio -dtb raspi3b/bcm2710-rpi-3-b-plus.dtb -serial null -serial pty -display none
+
+debug:
+	qemu-system-aarch64 -M raspi3b -kernel bootloader.img -initrd raspi3b/initramfs.cpio -dtb raspi3b/bcm2710-rpi-3-b-plus.dtb -serial null -serial pty -display none -S -s
 
 kernel8.img: $(KERNEL_OBJS)
 	echo $(KERNEL_SRCS)
