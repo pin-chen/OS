@@ -44,7 +44,7 @@ int ramdisk_get_addr(){
 }
 
 cpio_file* cpio_parse(){
-    if(!isinit){
+    if(isinit != 1){
         int initres = ramdisk_get_addr();
         if(!initres) isinit = 1;
         else return 0;
@@ -60,6 +60,10 @@ cpio_file* cpio_parse(){
         name = ptr + sizeof(struct cpio_newc_header);
         if(strcmp("TRAILER!!!", name) == 0) break;
         cur = (cpio_file*) simple_malloc (sizeof(cpio_file));
+        if(cur == NULL){
+            uart_print("Error: Get NULL Pointer!");
+            return NULL;
+        }
         if(head == NULL) head = cur;
         cur->header = ptr;
         cur->namesize = hex2u32_8(cur_cpio_header->c_namesize);

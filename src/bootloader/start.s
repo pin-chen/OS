@@ -9,7 +9,6 @@ _start:
 	mov x10, x0
 	adrp x0, _stack_top
 	mov sp, x0
-	mov x29, x0
 	adrp x0, _kernel_begin
 	adrp x1, _bootloader_begin
 	adrp x2, _loader_size

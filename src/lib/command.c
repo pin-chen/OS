@@ -48,6 +48,10 @@ void ls(){
 
 void cat(char *filename){
     cpio_file* file_ptr = cpio_parse();
+    if(file_ptr == NULL){
+        uart_print("Error: cpio");
+        return;
+    }
     int isfound = 0;
     for(cpio_file* cur = file_ptr; cur != NULL; cur = cur->next){
         if(strcmp(filename, cur->name) == 0){

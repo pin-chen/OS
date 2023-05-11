@@ -56,8 +56,17 @@ void boot_message(){
 
 void allocator_test(){
 	void *test1 = simple_malloc(1);
+	if(test1 == NULL){
+		uart_print("Error: Get NULL Pointer!");
+		newline();
+		return;
+	}
     void *test2 = simple_malloc(16);
-
+	if(test2 == NULL){
+		uart_print("Error: Get NULL Pointer!");
+		newline();
+		return;
+	}
     uart_print("Test Simple Allocator 1: ");
     uart_print_hex((uint64_t)test1, 64);
 	newline();

@@ -3,12 +3,12 @@
 #include <string.h>
 #include <allocator.h>
 #include <utils.h>
+#include <uart.h>
 
 void *_devicetree_begin = (void *) 0xffffffff;
 
 void fdt_traverse(initramfs_callback f, void *data){
     char *fdt = (char *) _devicetree_begin;
-
     if((uint64_t)fdt == 0xffffffff) return;
 
     fdt_header *header = (fdt_header *) fdt;
@@ -63,6 +63,11 @@ fdt_prop *fdt_nextprop(char *fdt_addr, char **nexttok){
         switch (ntohl(*(uint32_t*)fdt_addr)){
             case FDT_PROP:
                 prop = (fdt_prop*) simple_malloc(sizeof(fdt_prop));
+                if(prop == NULL){
+                    uart_print("Error: fdt_nuxtprop");
+                    newline();
+                    return NULL;
+                }
                 prop->len = ntohl(*(uint32_t*)(fdt_addr+4));
                 prop->name = fdt_string_begin + ntohl(*(uint32_t *) (fdt_addr + 8));
                 prop->value = fdt_addr + 12;

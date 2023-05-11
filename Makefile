@@ -35,14 +35,10 @@ debug:
 	qemu-system-aarch64 -M raspi3b -kernel bootloader.img -initrd raspi3b/initramfs.cpio -dtb raspi3b/bcm2710-rpi-3-b-plus.dtb -serial null -serial pty -display none -S -s
 
 kernel8.img: $(KERNEL_OBJS)
-	echo $(KERNEL_SRCS)
-	echo $(KERNEL_OBJS)
 	$(LD) -T $(KERNEL_DIR)/linker.ld -o kernel8.elf $^
 	$(OC) -O binary kernel8.elf kernel8.img
 
 bootloader.img: $(BOOTLOADER_OBJS)
-	echo $(BOOTLOADER_SRCS)
-	echo $(BOOTLOADER_OBJS)
 	$(LD) -T $(BOOTLOADER_DIR)/linker.ld -o bootloader.elf $^ --gc-sections
 	$(OC) -O binary bootloader.elf bootloader.img
 

@@ -1,4 +1,5 @@
 #include <allocator.h>
+//#include <uart.h>
 
 extern uint32_t _heap_begin;
 extern uint32_t _heap_end;
@@ -6,8 +7,11 @@ extern uint32_t _heap_end;
 void *mem_chunk_begin;
 void *mem_chunk_end;
 
+int check;
+
 void *simple_malloc(size_t size){
-    if(!mem_chunk_begin){
+    if(check != 1){
+        check = 1;
         mem_chunk_begin = (void *) &_heap_begin;
         mem_chunk_end = (void *) &_heap_end;
     }
