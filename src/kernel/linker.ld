@@ -20,14 +20,17 @@ SECTIONS
 	} >ROM
 	.data :
 	{
+		. = ALIGN(0x8);
 		_data_begin = .;
 		*(.data)
+		. = ALIGN(0x8);
 		_data_end = .;
 	} >RAM
 	.bss : {
 		. = ALIGN(0x8);
 		_bss_begin = .;
-		*(.bss)
+		*(.bss .bss.*)
+		. = ALIGN(0x8);
 		_bss_end = .;
 	} >RAM
 	_heap_begin = ORIGIN(RAM) + 1M;

@@ -15,15 +15,15 @@
 #include <devicetree.h>
 
 void help(){
-    uart_print("help\t: print this help menu");
+    uart_print("help\t  : print this help menu");
     newline();
-    uart_print("hello\t: print Hello World!");
+    uart_print("hello\t : print Hello World!");
     newline();
     uart_print("reboot\t: reboot the device");
     newline();
-    uart_print("ls\t: list directory contents");
+    uart_print("ls\t    : list directory contents");
     newline();
-    uart_print("cat\t: concatenate files and print on the standard output");
+    uart_print("cat\t   : concatenate files and print on the standard output");
     newline();
 }
 

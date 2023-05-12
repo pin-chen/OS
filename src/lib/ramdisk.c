@@ -34,9 +34,11 @@ int ramdisk_get_addr(){
     data.found = 0;
     fdt_traverse(ramdisk_fdt_callback, (void *)&data);
     if(data.found){
+        /*
         uart_print("/chosen linux,initrd-start: ");
         uart_print_hex((uint64_t)data.initrd_start, 64);
         newline();
+        */
         _randisk_begin = data.initrd_start;
         return 0;
     }

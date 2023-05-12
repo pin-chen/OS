@@ -15,8 +15,14 @@
 #include <ramdisk.h>
 #include <devicetree.h>
 
+extern uint32_t _rodata_begin;
+extern uint32_t _rodata_end;
+extern uint32_t _data_begin;
+extern uint32_t _data_end;
 extern uint32_t _bss_begin;
 extern uint32_t _bss_end;
+extern uint32_t _heap_begin;
+extern uint32_t _heap_end;
 extern uint32_t _stack_top;
 extern void *_devicetree_begin;
 
@@ -52,9 +58,35 @@ void boot_message(){
 	uart_print("arm_memory_size: ");
 	uart_print_hex(arm_memory_size, 32);
 	newline();
+
+	uart_print("&_rodata_begin=");
+	uart_print_hex((uint64_t) &_rodata_begin, 64);
+	newline();
+	uart_print("&_rodata_end=");
+	uart_print_hex((uint64_t) &_rodata_end, 64);
+	newline();
+	uart_print("&_data_begin=");
+	uart_print_hex((uint64_t) &_data_begin, 64);
+	newline();
+	uart_print("&_data_end=");
+	uart_print_hex((uint64_t) &_data_end, 64);
+	newline();
+	uart_print("&_bss_begin=");
+	uart_print_hex((uint64_t) &_bss_begin, 64);
+	newline();
+	uart_print("&_bss_end=");
+	uart_print_hex((uint64_t) &_bss_end, 64);
+	newline();
+	uart_print("&_heap_begin=");
+	uart_print_hex((uint64_t) &_heap_begin, 64);
+	newline();
+	uart_print("&_heap_end=");
+	uart_print_hex((uint64_t) &_heap_end, 64);
+	newline();
 }
 
 void allocator_test(){
+
 	void *test1 = simple_malloc(1);
 	if(test1 == NULL){
 		uart_print("Error: Get NULL Pointer!");
