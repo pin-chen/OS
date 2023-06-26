@@ -3,6 +3,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#define RingBuffer_flag_Empty 0b1
+#define RingBuffer_flag_Full 0b10
+#define RingBuffer_Empty(buf) (buf->flags&RingBuffer_flag_Empty)
+#define RingBuffer_Full(buf) (buf->flags&RingBuffer_flag_Full)
+
 #define BASE_ADDR			0x3f000000
 #define AUX_ENABLES       	BASE_ADDR + 0x215004
 #define AUX_MU_CNTL_REG   	BASE_ADDR + 0x215060
@@ -19,6 +24,13 @@
 #define GPPUDCLK0           BASE_ADDR + 0x200098
 #define GPPUDCLK1           BASE_ADDR + 0x20009c
 
+typedef struct{
+    uint32_t flags;
+    char *buf;
+    uint32_t lbound,rbound;
+    size_t size, len;
+} RingBuffer;
+
 void uart_init();
 
 size_t uart_write_1c(char*buf);
@@ -31,6 +43,10 @@ void newline();
 void uart_interrupt_handler();
 size_t uart_read_sync(char* buf, size_t len);
 size_t uart_read_async(char* buf, size_t len);
+
+RingBuffer *RingBuffer_new(size_t bufsize);
+size_t RingBuffer_writeb(RingBuffer *rbuf, char b);
+size_t RingBuffer_readb(RingBuffer *rbuf, char* b);
 
 #endif
 #define uart_read uart_read_async

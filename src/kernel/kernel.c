@@ -15,9 +15,10 @@
 #include <ramdisk.h>
 #include <devicetree.h>
 // lab3
-#include <exception.h>
-#include <coretimer.h>
 #include <interrupt.h>
+#include <coretimer.h>
+// lab4
+
 
 extern uint32_t _rodata_begin;
 extern uint32_t _rodata_end;
@@ -32,6 +33,7 @@ extern void *_devicetree_begin;
 
 extern uint32_t _user_begin;
 extern uint32_t _user_end;
+extern uint64_t exception_vector_table;
 
 void _init(void){
 	for(uint32_t*addr = &_bss_begin; addr != &_bss_end; addr++){
@@ -41,7 +43,7 @@ void _init(void){
 	boot_message();
 	allocator_test();
 	devicetree_check();
-	exception_init();
+	asm("msr vbar_el1, %0"::"r"((void*)&exception_vector_table));//exception
     coretimer_el0_enable();
     interrupt_enable();
 	spsr_el1_check();

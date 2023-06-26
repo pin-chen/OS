@@ -14,9 +14,9 @@
 #include <ramdisk.h>
 #include <devicetree.h>
 // lab3
-#include <exception.h>
-#include <coretimer.h>
 #include <interrupt.h>
+#include <coretimer.h>
+
 
 extern uint32_t _user_begin;
 extern uint32_t _user_end;

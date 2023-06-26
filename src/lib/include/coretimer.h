@@ -5,10 +5,6 @@
 
 #define CORE0_TIMER_IRQ_CTRL 0x40000040
 
-void coretimer_el0_enable();
-void coretimer_el0_handler();
-void coretimer_el0_set(uint32_t t);
-
 typedef struct TIMER_{
     uint64_t time;
     void (*func)(void *);
@@ -16,5 +12,8 @@ typedef struct TIMER_{
     struct TIMER_* next;
 } TIMER;
 
+void coretimer_el0_enable();
+void coretimer_el0_handler();
 void add_timer(uint64_t time_wait, void (*func)(void *), void *arg);
+
 #endif

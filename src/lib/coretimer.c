@@ -9,10 +9,6 @@
 
 TIMER* timer_queue;
 
-void coretimer_el0_enable(){
-    asm("msr cntp_ctl_el0, %0"::"r"((uint64_t)1));
-}
-
 void timer_queue_push(TIMER* new_timer){
     interrupt_disable();
     if(!timer_queue){
@@ -63,22 +59,8 @@ void timer_sched(){
     memory_write(CORE0_TIMER_IRQ_CTRL, 2);
 }
 
-void add_timer(uint64_t time_wait, void (*func)(void *), void *arg){
-    uint32_t cntfrq_el0;
-    uint64_t cntpct_el0;
-    asm("mrs %0, cntfrq_el0":"=r"(cntfrq_el0));
-    asm("mrs %0, cntpct_el0":"=r"(cntpct_el0));
-    
-    uint64_t time = cntpct_el0 + time_wait * cntfrq_el0;
-
-    TIMER* new_timer = (TIMER*)simple_malloc(sizeof(TIMER));
-    new_timer->time = time;
-    new_timer->func = func;
-    new_timer->arg = arg;
-    new_timer->next = 0;
-
-    timer_queue_push(new_timer);
-    timer_sched();
+void coretimer_el0_enable(){
+    asm("msr cntp_ctl_el0, %0"::"r"((uint64_t)1));
 }
 
 void coretimer_el0_handler(){
@@ -99,5 +81,23 @@ void coretimer_el0_handler(){
         interrupt_enable();
         timer->func(timer->arg);
     }
+    timer_sched();
+}
+
+void add_timer(uint64_t time_wait, void (*func)(void *), void *arg){
+    uint32_t cntfrq_el0;
+    uint64_t cntpct_el0;
+    asm("mrs %0, cntfrq_el0":"=r"(cntfrq_el0));
+    asm("mrs %0, cntpct_el0":"=r"(cntpct_el0));
+    
+    uint64_t time = cntpct_el0 + time_wait * cntfrq_el0;
+
+    TIMER* new_timer = (TIMER*)simple_malloc(sizeof(TIMER));
+    new_timer->time = time;
+    new_timer->func = func;
+    new_timer->arg = arg;
+    new_timer->next = 0;
+
+    timer_queue_push(new_timer);
     timer_sched();
 }
