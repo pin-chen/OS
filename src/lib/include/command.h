@@ -5,4 +5,6 @@ void hello();
 void reboot();
 void ls();
 void cat(char *filename);
+void exec(char *filename);
+void setTimeout();
 #endif

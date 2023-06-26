@@ -1,7 +1,7 @@
 from pwn import *
 
 kernel = open("kernel8.img", "rb").read()
-r = serialtube("/dev/pts/7", convert_newlines=False)
+r = serialtube("/dev/pts/13", convert_newlines=False)
 #r = serialtube("/dev/ttyS0", convert_newlines=False)
 #r = remote('127.0.0.1',10001)
 size = (str(len(kernel)) + "\n" ).encode() 

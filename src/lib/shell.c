@@ -21,6 +21,10 @@ void shell(){
 			uart_print("Filename: ");
 			uart_readline(buf);
 			cat(buf);
+		}else if(strncmp(buf, "exec", 4) == 0){
+			exec(&buf[5]);
+		}else if(strncmp(buf, "setTimeout", 10) == 0){
+			setTimeout();
 		}else{
 			uart_print("Unknown command: [");
 			uart_print(buf);

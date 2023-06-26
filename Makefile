@@ -19,11 +19,10 @@ CFLAGS := -O0 -I $(LIB_DIR)/include -fno-stack-protector -ffreestanding -fdata-s
 
 .PHONY : all clean rootfs test debug
 
-all: kernel8.img bootloader.img
-	cp bootloader.img raspi3b/bootloader.img
+all: kernel8.img
 
 clean:
-	rm -rf build kernel8.img kernel8.elf bootloader.elf bootloader.img
+	rm -rf build kernel8.img kernel8.elf
 
 rootfs:
 	cd rootfs && find . | cpio -o -H newc > ../raspi3b/initramfs.cpio

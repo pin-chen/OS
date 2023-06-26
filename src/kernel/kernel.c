@@ -14,6 +14,10 @@
 #include <allocator.h>
 #include <ramdisk.h>
 #include <devicetree.h>
+// lab3
+#include <exception.h>
+#include <coretimer.h>
+#include <interrupt.h>
 
 extern uint32_t _rodata_begin;
 extern uint32_t _rodata_end;
@@ -26,6 +30,9 @@ extern uint32_t _heap_end;
 extern uint32_t _stack_top;
 extern void *_devicetree_begin;
 
+extern uint32_t _user_begin;
+extern uint32_t _user_end;
+
 void _init(void){
 	for(uint32_t*addr = &_bss_begin; addr != &_bss_end; addr++){
 		*addr = 0;
@@ -34,6 +41,11 @@ void _init(void){
 	boot_message();
 	allocator_test();
 	devicetree_check();
+	exception_init();
+    coretimer_el0_enable();
+    interrupt_enable();
+	spsr_el1_check();
+	add_timer(8, &boottimer, 0);
 	shell();
 }
 
@@ -86,7 +98,6 @@ void boot_message(){
 }
 
 void allocator_test(){
-
 	void *test1 = simple_malloc(1);
 	if(test1 == NULL){
 		uart_print("Error: Get NULL Pointer!");
@@ -112,4 +123,23 @@ void devicetree_check(){
 	uart_print("Devicetree address: ");
     uart_print_hex((uint64_t)_devicetree_begin, 64);
 	newline();
+}
+
+void spsr_el1_check(){
+    uint64_t spsr_el1 = 0;
+    asm("mrs %0, spsr_el1":"=r"(spsr_el1));
+    uart_print("spsr_el1: ");
+    uart_print_hex(spsr_el1, 32);
+	newline();
+}
+
+void boottimer(){
+    uint32_t cntfrq_el0;
+    uint64_t cntpct_el0;
+    asm("mrs %0, cntfrq_el0":"=r"(cntfrq_el0));
+    asm("mrs %0, cntpct_el0":"=r"(cntpct_el0));
+    uart_print("Seconds after booting: ");
+    uart_print_hex(cntpct_el0 / cntfrq_el0, 64);
+	newline();
+    add_timer(8, &boottimer, 0);
 }

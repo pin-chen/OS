@@ -4,6 +4,11 @@
 #include <stddef.h>
 
 #include <utils.h>
+#include <interrupt.h>
+#include <ringbuffer.h>
+
+#define UART_BUF_LEN 0x200
+RingBuffer *uart_buffer;
 
 void uart_init(){
     //12-14, 15-17
@@ -18,29 +23,41 @@ void uart_init(){
     // Initialization 1 ~ 8
     memory_write(AUX_ENABLES, 0b001);
     memory_write(AUX_MU_CNTL_REG, 0u);
-    memory_write(AUX_MU_IER_REG, 0u);
+    
     memory_write(AUX_MU_LCR_REG, 3u);
     memory_write(AUX_MU_MCR_REG, 0u);
     memory_write(AUX_MU_BAUD_REG, 270u);
     memory_write(AUX_MU_IIR_REG, 6u);
     memory_write(AUX_MU_CNTL_REG, 3u);
+    // interrupt
+    memory_write(AUX_MU_IER_REG, 0b01);
+    memory_write(ARMINT_En_IRQs1_REG, memory_read(ARMINT_En_IRQs1_REG) | (1<<29));
+    uart_buffer = RingBuffer_new(UART_BUF_LEN);
 }
 
-size_t uart_read_1c(char*buf){
-    while(!(memory_read(AUX_MU_LSR_REG) & 0x01));
-    buf[0] = (char)(memory_read(AUX_MU_IO_REG) & 0xff);
-    //if(buf[0] == '\r') 
-    //    uart_print("\r\n");
-    //else
-    //    uart_write_1c(&buf[0]);
-    return 1;
+void uart_interrupt_handler(){
+    interrupt_disable();
+    while((memory_read(AUX_MU_LSR_REG) & 1) && !RingBuffer_Full(uart_buffer)){
+        RingBuffer_writeb(uart_buffer, memory_read(AUX_MU_IO_REG)&0xff);
+    }
+    interrupt_enable();
 }
 
-size_t uart_read(char* buf, size_t len){
+size_t uart_read_sync(char* buf, size_t len){
     size_t recvlen = 0;
     while(recvlen < len){
         while(!(memory_read(AUX_MU_LSR_REG) & 1));
         buf[recvlen++] = (char)(memory_read(AUX_MU_IO_REG) & 0xff);
+    }
+    return recvlen;
+}
+
+size_t uart_read_async(char* buf, size_t len)
+{
+    size_t recvlen = 0;
+    while(recvlen < len){
+        while(RingBuffer_Empty(uart_buffer));
+        if(RingBuffer_readb(uart_buffer, &buf[recvlen]) == 1) recvlen++;
     }
     return recvlen;
 }
@@ -62,7 +79,7 @@ size_t uart_write(char* buf, size_t len){
 
 size_t uart_readline(char* buf){
     int i = 0;
-    while(uart_read_1c(&buf[i])){
+    while(uart_read(&buf[i], 1)){
         if(buf[i] == '\r' || buf[i] == '\n'){
             buf[i] = '\0';
             break;
@@ -95,3 +112,4 @@ void uart_print_hex(uint64_t num, int len){
 void newline(){
     uart_print("\r\n");
 }
+

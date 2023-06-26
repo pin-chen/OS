@@ -5,4 +5,6 @@ void _init();
 void boot_message();
 void allocator_test();
 void devicetree_check();
+void spsr_el1_check();
+void boottimer();
 #endif
