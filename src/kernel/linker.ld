@@ -3,8 +3,8 @@ MEMORY
 {
 	CODE (rx) : ORIGIN = 0x80000, LENGTH = 128K
 	ROM (r) : ORIGIN = 0xa0000, LENGTH = 128K
-	RAM (rw) : ORIGIN = 0xc0000, LENGTH = 9M
-	USER (rwx) : ORIGIN = 0x1080000, LENGTH = 1M
+	RAM (rw) : ORIGIN = 0xc0000, LENGTH = 40M
+	USER (rwx) : ORIGIN = 0x40c0000, LENGTH = 5M
 }
 SECTIONS
 {
@@ -34,8 +34,8 @@ SECTIONS
 		. = ALIGN(0x8);
 		_bss_end = .;
 	} >RAM
-	_heap_begin = ORIGIN(RAM) + 1M;
-	_heap_end = ORIGIN(RAM) + 8M;
+	_heap_begin = ORIGIN(RAM) + 20M;
+	_heap_end = ORIGIN(RAM) + 35M;
 	_stack_top = ORIGIN(RAM) + LENGTH(RAM);
 	_user_begin = ORIGIN(USER);
 	_user_end = ORIGIN(USER) + LENGTH(USER) - 8;

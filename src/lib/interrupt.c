@@ -18,7 +18,7 @@ void interrupt_disable(){
     interrupt_depth--;
     if(interrupt_depth == 0) asm("msr DAIFSet, 0xf");
 }
-
+#include <command.h>
 void exception_handler(){
     uint64_t spsr_el1;
     uint64_t elr_el1;
@@ -40,6 +40,7 @@ void exception_handler(){
     uart_print("esr_el1: ");
     uart_print_hex(esr_el1, 64);
     newline();
+    reboot();
 }
 
 void interrupt_irq_handler(){
